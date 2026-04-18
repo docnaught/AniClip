@@ -42,14 +42,14 @@ export function Toolbar() {
   };
 
   return (
-    <aside className="w-[56px] bg-[#1e1e1e] border-r border-[#333333] flex flex-col items-center py-4 space-y-4 z-10 shrink-0 tutorial-step-tools overflow-y-visible relative shadow-xl">
-      <div className="flex flex-col space-y-2">
+    <aside className="w-[48px] md:w-[56px] bg-[#1e1e1e] border-r border-[#333333] flex flex-col items-center py-2 md:py-4 space-y-2 md:space-y-4 z-10 shrink-0 tutorial-step-tools overflow-y-auto overflow-x-visible relative shadow-xl custom-scrollbar">
+      <div className="flex flex-col space-y-1 md:space-y-2 shrink-0">
         {tools.map((t) => (
           <div key={t.id} className="relative flex justify-center w-full">
             <button
               onClick={() => setTool(t.id)}
               className={cn(
-                "w-9 h-9 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-[18px]",
+                "w-8 h-8 md:w-9 md:h-9 rounded-lg flex items-center justify-center transition-colors cursor-pointer text-[18px]",
                 selectedTool === t.id 
                   ? "bg-[#3a86ff] text-white" 
                   : "text-[#909090] hover:bg-[#2a2a2a] hover:text-[#e0e0e0]"
@@ -61,7 +61,7 @@ export function Toolbar() {
 
             {/* Shape Options Popover */}
             {t.id === 'shape' && selectedTool === 'shape' && (
-              <div className="absolute left-[56px] top-0 ml-2 flex flex-col space-y-1 bg-[#121212] p-1 rounded-lg border border-[#333333] shadow-2xl z-50">
+              <div className="fixed left-[48px] md:left-[56px] mt-0 flex flex-col space-y-1 bg-[#121212] p-1 rounded-lg border border-[#333333] shadow-2xl z-[100]">
                 {(['rectangle', 'ellipse', 'line', 'triangle', 'diamond', 'star'] as ShapeType[]).map(s => (
                   <button
                      key={s}
@@ -85,7 +85,7 @@ export function Toolbar() {
 
             {/* Text Options Popover */}
             {t.id === 'text' && selectedTool === 'text' && (
-              <div className="absolute left-[56px] top-0 ml-2 flex flex-col space-y-1 bg-[#121212] p-2 rounded-lg border border-[#333333] shadow-2xl z-50 w-32 text-center pointer-events-auto">
+              <div className="fixed left-[48px] md:left-[56px] mt-0 flex flex-col space-y-1 bg-[#121212] p-2 rounded-lg border border-[#333333] shadow-2xl z-[100] w-32 text-center pointer-events-auto">
                 <label className="text-[10px] text-[#909090] uppercase font-bold tracking-wider mb-1">Font</label>
                 {(['Inter', 'Serif', 'Monospace', 'Comic Sans MS'] as string[]).map(f => (
                   <button
@@ -133,20 +133,20 @@ export function Toolbar() {
         </button>
       </div>
 
-      <div className="w-8 h-px bg-[#333333]" />
+      <div className="w-8 h-px bg-[#333333] shrink-0" />
 
       {/* Colors */}
-      <div className="flex flex-col items-center space-y-2 w-full px-2">
+      <div className="flex flex-col items-center space-y-2 w-full px-2 shrink-0">
         <button 
           onClick={() => colorInputRef.current?.click()}
-          className="w-10 h-10 rounded-full border border-[#333333] shadow-inner relative flex items-center justify-center group overflow-hidden transition-transform hover:scale-105"
+          className="w-8 h-8 rounded-full border border-[#333333] shadow-inner relative flex items-center justify-center group overflow-hidden transition-transform hover:scale-105"
           style={{ 
             background: 'conic-gradient(red, yellow, lime, aqua, blue, magenta, red)'
           }}
           title="Native Color Picker"
         >
-          <div className="w-5 h-5 rounded-full absolute" style={{ backgroundColor: toolColor, border: '2px solid rgba(255,255,255,0.8)' }}></div>
-          <Palette size={20} className="opacity-0 group-hover:opacity-100 transition-opacity absolute text-white drop-shadow-md z-10" />
+          <div className="w-4 h-4 rounded-full absolute" style={{ backgroundColor: toolColor, border: '2px solid rgba(255,255,255,0.8)' }}></div>
+          <Palette size={16} className="opacity-0 group-hover:opacity-100 transition-opacity absolute text-white drop-shadow-md z-10" />
         </button>
         <input 
           ref={colorInputRef}
@@ -156,13 +156,13 @@ export function Toolbar() {
           className="sr-only"
         />
         
-        <div className="flex flex-col space-y-1.5 pt-2">
+        <div className="grid grid-cols-2 gap-1.5 pt-1">
           {presets.map(color => (
             <button
               key={color}
               onClick={() => setColor(color)}
               className={cn(
-                "w-6 h-6 rounded border-2 transition-transform hover:scale-110",
+                "w-5 h-5 rounded border-2 transition-transform hover:scale-110",
                 toolColor === color ? "border-white scale-110" : "border-[#333333]"
               )}
               style={{ backgroundColor: color }}
@@ -171,25 +171,25 @@ export function Toolbar() {
         </div>
       </div>
 
-      <div className="w-8 h-px bg-[#333333]" />
+      <div className="w-8 h-px bg-[#333333] shrink-0" />
 
       {/* Size Slider (Vertical) */}
-      <div className="flex flex-col items-center justify-center flex-1 h-32 w-full px-2">
-        <div className="text-xs text-[#909090] font-medium mb-3">{toolSize}{selectedTool === 'text' ? 'pt' : 'px'}</div>
+      <div className="flex flex-col items-center justify-center h-20 w-full px-2 shrink-0">
+        <div className="text-[10px] text-[#909090] font-medium mb-1">{toolSize}{selectedTool === 'text' ? 'pt' : 'px'}</div>
         <input
           type="range"
           min="1"
           max={selectedTool === 'text' ? "100" : "50"}
           value={toolSize}
           onChange={(e) => setSize(Number(e.target.value))}
-          className="w-24 -rotate-90 origin-center bg-[#2a2a2a] rounded-lg appearance-none h-1.5 outline-none cursor-pointer slider-thumb"
+          className="w-16 -rotate-90 origin-center bg-[#2a2a2a] rounded-lg appearance-none h-1 outline-none cursor-pointer slider-thumb"
         />
       </div>
 
-      <div className="w-8 h-px bg-[#333333]" />
+      <div className="w-8 h-px bg-[#333333] shrink-0" />
 
       {/* Actions */}
-      <div className="flex flex-col space-y-2 mb-auto">
+      <div className="flex flex-col space-y-1 mb-auto pb-4 shrink-0">
         <button 
           onClick={undoLastStroke}
           className="w-9 h-9 rounded-lg flex items-center justify-center text-[#909090] hover:text-[#e0e0e0] hover:bg-[#2a2a2a] transition-colors"
@@ -221,6 +221,10 @@ export function Toolbar() {
           background: #3b82f6;
           border-radius: 50%;
           cursor: pointer;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 0px; /* Hide scrollbar completely to save horizontal space but keep scrollability */
+          background: transparent;
         }
       `}</style>
     </aside>

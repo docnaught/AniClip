@@ -301,18 +301,18 @@ export function CanvasWorkspace() {
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (isPlaying) return;
     
-    // Track pointer
-    activePointers.current.set(e.pointerId, { clientX: e.clientX, clientY: e.clientY });
-
-    // Multi-touch pinch/pan start
-    if (activePointers.current.size === 2) {
-      setIsDrawing(false);
-      setCurrentPoints([]);
-      const pts = Array.from(activePointers.current.values());
-      const dist = Math.hypot(pts[1].clientX - pts[0].clientX, pts[1].clientY - pts[0].clientY);
-      const center = { x: (pts[0].clientX + pts[1].clientX) / 2, y: (pts[0].clientY + pts[1].clientY) / 2 };
-      
-      pinchState.current = {
+      // Track pointer
+      activePointers.current.set(e.pointerId, { clientX: e.clientX, clientY: e.clientY });
+  
+      // Multi-touch pinch/pan start
+      if (activePointers.current.size === 2) {
+        setIsDrawing(false);
+        setCurrentPoints([]);
+        const pts = Array.from(activePointers.current.values()) as {clientX: number, clientY: number}[];
+        const dist = Math.hypot(pts[1].clientX - pts[0].clientX, pts[1].clientY - pts[0].clientY);
+        const center = { x: (pts[0].clientX + pts[1].clientX) / 2, y: (pts[0].clientY + pts[1].clientY) / 2 };
+        
+        pinchState.current = {
         initialDistance: dist,
         initialZoom: zoom,
         initialPan: { ...pan },
@@ -411,7 +411,7 @@ export function CanvasWorkspace() {
 
     // Handle Multi-touch Pinch/Pan
     if (activePointers.current.size === 2 && pinchState.current) {
-      const pts = Array.from(activePointers.current.values());
+      const pts = Array.from(activePointers.current.values()) as {clientX: number, clientY: number}[];
       const dist = Math.hypot(pts[1].clientX - pts[0].clientX, pts[1].clientY - pts[0].clientY);
       const center = { x: (pts[0].clientX + pts[1].clientX) / 2, y: (pts[0].clientY + pts[1].clientY) / 2 };
       
